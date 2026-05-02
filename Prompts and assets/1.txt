@@ -1,0 +1,104 @@
+Am deja un master prompt funcțional pentru BreakOps. Vreau să-l păstrezi ca sursă principală pentru funcționalități, arhitectură, DB, auth, ecrane și pașii de implementare.
+
+Atașez și imagini de referință pentru UI. Vreau să modificăm doar direcția vizuală/design system-ul, nu funcționalitățile.
+
+IMPORTANT:
+Dacă există conflict între descrierea generică de UI din promptul existent și imaginile atașate, imaginile atașate + instrucțiunile de mai jos au prioritate pentru UI.
+
+Design override:
+- UI dark mode first
+- stil futuristic / cyber / premium SaaS dashboard
+- dark navy / near-black background, nu negru simplu
+- neon blue, cyan, violet, purple accents
+- glowing cards
+- luminous borders
+- subtle glassmorphism
+- rounded cards 20–28px
+- gradient buttons blue → violet
+- progress rings luminoase
+- sidebar web fix
+- top bar web
+- right insights panel pe desktop
+- bottom tabs pe mobile
+- web-ul trebuie să fie un dashboard responsive real, nu o aplicație mobilă întinsă
+- mobile-ul trebuie să păstreze același design language, dar stacked vertical
+- toate culorile, spacing-ul, radius-ul, shadows/glows și typography trebuie să fie în design tokens centralizate
+- nu hardcoda culori random în componente
+- codul trebuie să fie production-ready, modular, scalabil
+
+Modifică planul existent astfel:
+1. În Pasul 1, include design system-ul dark/neon complet:
+   - theme/colors.ts
+   - theme/gradients.ts
+   - theme/shadows.ts
+   - theme/spacing.ts
+   - theme/radius.ts
+   - theme/typography.ts
+   - theme/index.ts
+
+2. În Pasul 1, creează layout shell responsive:
+   - AppShell
+   - WebSidebar
+   - WebTopBar
+   - WebRightPanel
+   - MobileTabBar
+   - ResponsiveContainer
+
+3. În Pasul 1, creează componente UI de bază:
+   - AppCard
+   - GlowCard
+   - GradientCard
+   - GradientButton
+   - SecondaryButton
+   - RecoveryScoreRing
+   - StatCard
+   - BreakCard
+   - UpcomingBreakCard
+   - InsightCard
+   - StatusBadge
+   - ProgressBar
+   - MiniLineChart placeholder
+   - EmptyState
+   - LoadingState
+   - SkeletonCard
+
+4. În Pasul 8 / Dashboard, web layout-ul trebuie să fie:
+   - left sidebar
+   - top header
+   - main dashboard grid
+   - right insights panel
+
+5. În Pasul 8 / Dashboard, mobile layout-ul trebuie să fie:
+   - bottom tabs
+   - greeting
+   - current mode
+   - recovery score ring
+   - next break
+   - focus area cards
+   - weekly chart
+   - today plan preview
+
+6. În Pasul 10 / Stats și Pasul 13 / Responsive web polish, prioritizează layout-ul desktop din imaginile atașate:
+   - charts mari
+   - cards glowing
+   - multi-column grid
+   - right insights panel
+   - break consistency
+   - streak
+   - weekly progress
+
+7. În Pasul 14 / UI polish final, compară toate ecranele cu imaginile atașate și ajustează:
+   - spacing
+   - border radius
+   - glow intensity
+   - card backgrounds
+   - text hierarchy
+   - active states
+   - sidebar width
+   - dashboard grid
+   - progress rings
+   - charts
+
+Nu genera toată aplicația acum.
+Mai întâi actualizează planul de implementare existent ca să includă acest design override.
+Apoi implementează doar Pasul 1.

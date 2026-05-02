@@ -1,0 +1,298 @@
+UI / DESIGN ADDENDUM PENTRU BREAKOPS
+
+Pe lângă specificația funcțională deja definită pentru BreakOps, vreau ca aplicația să aibă un design foarte apropiat de imaginile atașate.
+
+Imaginile atașate sunt referința principală pentru:
+- dark futuristic style
+- neon blue / cyan / violet accents
+- cards cu glow
+- sidebar web
+- dashboard web
+- break library web
+- profile/settings web
+- mobile dashboard
+- mobile break library
+- mobile profile/settings
+
+IMPORTANT:
+Nu vreau un UI doar vag inspirat. Vreau ca rezultatul să fie cât mai asemănător vizual cu imaginile atașate, adaptat în cod production-ready.
+
+Design direction:
+- dark mode first
+- futuristic cyber/productivity dashboard
+- deep navy / black gradient background
+- electric blue, cyan, violet, purple accents
+- rounded cards
+- luminous borders
+- subtle glassmorphism
+- glowing progress rings
+- glowing active states
+- soft shadows
+- modern SaaS/productivity dashboard feel
+- premium app feel
+- clean typography
+- responsive web + mobile
+
+Background:
+- folosește dark navy / near-black, nu negru simplu
+- adaugă gradient subtil radial sau linear
+- poate exista un grid/noise subtil în fundal pe web
+- web-ul trebuie să pară un dashboard premium, nu o aplicație mobilă întinsă
+
+Cards:
+- cardurile trebuie să aibă:
+  - background dark translucent
+  - border subtil cyan/blue/violet
+  - radius mare: 20–28px
+  - glow subtil pe hover/active
+  - padding generos
+  - shadow/elevation modern
+- cardurile principale pot avea border glow mai puternic
+
+Buttons:
+- primary button: gradient blue → violet
+- secondary button: dark background + border luminos
+- active state cu glow
+- hover state pe web
+- pressed state pe mobile
+- disabled/loading states obligatorii
+
+Typography:
+- folosește Inter / Manrope / SF Pro-like
+- headings bold, mari
+- labels mici, semi-bold
+- body text clar
+- muted text gri-albăstrui
+- accent text cyan/violet
+
+Design tokens:
+Creează tokens centralizate pentru:
+- colors
+- gradients
+- spacing
+- radius
+- shadows/glows
+- typography
+- borders
+- chart colors
+
+Nu hardcoda culori în fiecare componentă.
+
+Responsive behavior:
+Mobile:
+- bottom tab navigation
+- layout pe o singură coloană
+- carduri stacked
+- dashboard compact
+- break library ca list/cards verticale
+- profile/settings stacked
+
+Tablet:
+- 2 coloane unde are sens
+- sidebar collapsible sau top/bottom navigation adaptiv
+
+Web/Desktop:
+- sidebar fix în stânga
+- top bar
+- main content grid
+- right insights panel
+- charts mai mari
+- break library în grid 2–3 coloane
+- settings în layout pe coloane
+
+Web dashboard layout:
+Trebuie să semene cu imaginile web atașate.
+
+Structură:
+1. Left Sidebar
+- BreakOps logo
+- Home
+- Dashboard
+- Break Library
+- Insights
+- Calendar
+- Goals
+- Reminders
+- Analytics
+- Settings
+- Help & Support
+- profile/pro card jos
+
+2. Top Header
+- greeting: “Good morning, Alex”
+- current mode card: “Meeting Heavy Day”
+- quick labels/icons:
+  - Recover / Recharge
+  - Refocus / Recalibrate
+  - Perform / Better
+- notification icon
+- user avatar/initials
+
+3. Main Dashboard
+- Recovery Score card cu circular ring mare
+- Upcoming Breaks cards
+- Today’s Snapshot cards:
+  - Breaks Taken
+  - Focus Time
+  - Stress Level
+  - Energy Level
+- Focus Time Trend chart
+- Break Consistency card
+- Daily Summary card
+
+4. Right Panel
+- Next Break card
+- Break Streak card
+- Weekly Progress card
+- Quick Stats list
+
+Break Library web:
+- sidebar
+- search bar
+- filters:
+  - All
+  - Physical
+  - Mental
+  - Breathing
+  - Digital
+- grid de break cards:
+  - Eye Reset
+  - Posture Reset
+  - Breathing Reset
+  - Walk Break
+  - Shutdown Ritual
+  - Digital Detox
+- fiecare card:
+  - neon illustration/image placeholder
+  - category badge
+  - title
+  - description
+  - duration
+  - difficulty
+  - Start button
+  - Save button
+  - bookmark icon
+- right panel:
+  - Favorites
+  - Recommended for You
+  - Break Consistency
+
+Profile/Settings web:
+- sidebar
+- profile card
+- settings panel
+- insights panel
+- Appearance:
+  - Light
+  - Dark
+  - System
+- Notifications:
+  - Break Reminders
+  - Daily Summary
+  - Streak Alerts
+- Break Preferences:
+  - Gentle
+  - Moderate
+  - Intense
+- Work Hours
+- Security:
+  - Biometric Unlock
+- Focus Areas:
+  - Focus
+  - Posture
+  - Stress Relief
+  - Sleep
+
+Mobile screens:
+Pe mobile, păstrează același design language, dar cu bottom tabs.
+
+Mobile Home:
+- greeting
+- current status
+- recovery score ring
+- next break
+- focus areas
+- last 7 days chart
+- bottom tabs
+
+Mobile Today Plan:
+- timeline/listă de breaks
+- done / skip / snooze
+- status badges
+- bottom tabs
+
+Mobile Break Session:
+- timer circular mare
+- break title
+- instructions
+- complete / skip
+- calm futuristic illustration/card
+
+Mobile Break Library:
+- listă/cards verticale
+- filter chips
+- neon illustrations
+- Start / Save
+
+Mobile Profile/Settings:
+- profile card
+- theme selector
+- notification toggles
+- break intensity
+- work hours
+- biometric unlock
+- focus area chips
+
+Components required:
+- AppShell
+- WebSidebar
+- WebTopBar
+- WebRightPanel
+- MobileTabBar
+- AppCard
+- GlowCard
+- GradientCard
+- GradientButton
+- SecondaryButton
+- RecoveryScoreRing
+- MiniLineChart
+- DonutChart
+- ProgressBar
+- StatCard
+- BreakCard
+- UpcomingBreakCard
+- InsightCard
+- SettingsSection
+- ToggleRow
+- ThemeToggle
+- FocusAreaChip
+- StatusBadge
+- EmptyState
+- LoadingState
+- SkeletonCard
+
+Implementation instructions:
+- First implement design system and layout shell.
+- Then implement Web Dashboard.
+- Then implement Break Library web.
+- Then implement Profile/Settings web.
+- Then implement mobile equivalents.
+- Use mock data only in a separate file:
+  - mock/breaks.ts
+  - mock/dashboard.ts
+  - mock/stats.ts
+- Do not hardcode mock data directly inside UI components.
+- Later this data will be replaced by Supabase services/hooks.
+
+Quality:
+- TypeScript strict
+- responsive
+- reusable components
+- no huge files
+- no inline random colors
+- no business logic inside UI components
+- loading/error/empty states
+- clean scalable code
+
+Goal:
+The result should look like a polished BreakOps product, very close to the attached dark neon screenshots, while still being implemented as production-ready responsive UI.

@@ -1,0 +1,371 @@
+Vreau să construim backend-ul pentru o aplicație numită provizoriu “BreakOps”.
+
+Context produs:
+BreakOps este o aplicație cross-platform pentru developeri / oameni din IT care îi ajută să își gestioneze micro-pauzele, recuperarea, mood-ul, focusul și scorul zilnic de recovery.
+
+Aplicația are:
+- autentificare user
+- onboarding
+- profil personal
+- preferințe de lucru
+- mood/status pe zi sau interval orar
+- plan zilnic de pauze
+- break-uri programate
+- status break: pending / done / skipped / snoozed / missed
+- daily recovery score
+- istoric ultimele 7 zile
+- statistici săptămânale
+- light/dark/system theme salvat în profil/settings
+
+Stack backend:
+- Supabase Auth
+- Supabase PostgreSQL
+- Supabase Row Level Security
+- Supabase auto-generated API
+- Supabase Edge Functions doar dacă sunt recomandate, dar pentru MVP prefer cât mai multă logică simplă în app
+- Nu folosim service_role key în frontend
+- Frontend-ul va folosi doar anon public key + RLS
+- App-ul este făcut în Expo React Native + Web
+
+Scopul acestui prompt:
+Vreau să generezi tot ce ține de backend/API/DB pentru MVP:
+1. schema SQL completă
+2. enum-uri / check constraints
+3. indexes
+4. RLS policies
+5. seed data pentru break_types
+6. funcții SQL utile, doar dacă merită
+7. explicație cum frontend-ul comunică cu Supabase
+8. exemple de query-uri pentru operațiunile principale
+9. recomandări pentru ce logică rămâne în frontend și ce logică poate fi mutată ulterior în Edge Functions
+
+Important:
+Supabase ține loc de backend/API în MVP.
+Nu vreau API separat cu Express/Next.js acum.
+Vreau să folosesc API-ul auto-generat de Supabase, protejat prin RLS.
+
+Entități principale:
+
+1. profiles
+Salvează profilul userului și setările principale de onboarding.
+
+Fields:
+- id uuid primary key references auth.users(id) on delete cascade
+- email text
+- full_name text
+- role text
+- avatar_url text nullable
+- work_start_time time
+- work_end_time time
+- working_days text[] sau jsonb
+- break_intensity text
+- default_day_mode text
+- focus_areas text[] sau jsonb
+- notifications_enabled boolean default true
+- biometric_enabled boolean default false
+- theme text default 'system'
+- onboarding_completed boolean default false
+- created_at timestamptz default now()
+- updated_at timestamptz default now()
+
+Valid values:
+role:
+- developer
+- designer
+- qa
+- devops
+- pm
+- other
+
+break_intensity:
+- light
+- normal
+- aggressive
+
+default_day_mode:
+- deep_work
+- coding_intense
+- meeting_heavy
+- learning_day
+- low_energy
+- light_work
+- debugging_day
+- launch_day
+
+theme:
+- system
+- light
+- dark
+
+2. break_types
+Biblioteca de pauze disponibile.
+
+Fields:
+- id uuid primary key
+- title text
+- slug text unique
+- category text
+- duration_seconds integer
+- instructions jsonb
+- difficulty text
+- recommended_for text[] sau jsonb
+- recommended_day_modes text[] sau jsonb
+- is_premium boolean default false
+- is_active boolean default true
+- created_at timestamptz default now()
+
+Valid categories:
+- eyes
+- neck
+- back
+- wrists
+- posture
+- mental_energy
+- breathing
+- movement
+- shutdown
+- general
+
+difficulty:
+- easy
+- medium
+
+3. daily_plans
+Un plan zilnic pentru fiecare user.
+
+Fields:
+- id uuid primary key
+- user_id uuid references auth.users(id) on delete cascade
+- date date
+- day_mode text
+- mood_summary text nullable
+- recovery_score integer default 0
+- completed_count integer default 0
+- skipped_count integer default 0
+- missed_count integer default 0
+- snoozed_count integer default 0
+- total_count integer default 0
+- created_at timestamptz default now()
+- updated_at timestamptz default now()
+
+Constraints:
+- unique(user_id, date)
+- recovery_score între 0 și 100
+
+4. daily_breaks
+Pauzele efective programate într-un plan zilnic.
+
+Fields:
+- id uuid primary key
+- user_id uuid references auth.users(id) on delete cascade
+- daily_plan_id uuid references daily_plans(id) on delete cascade
+- break_type_id uuid references break_types(id)
+- scheduled_at timestamptz
+- started_at timestamptz nullable
+- completed_at timestamptz nullable
+- status text default 'pending'
+- snoozed_until timestamptz nullable
+- feedback text nullable
+- created_at timestamptz default now()
+- updated_at timestamptz default now()
+
+Valid status:
+- pending
+- done
+- skipped
+- snoozed
+- missed
+
+Valid feedback:
+- helped
+- neutral
+- not_useful
+
+5. mood_entries
+Status/mood setat de user pentru zi sau interval.
+
+Fields:
+- id uuid primary key
+- user_id uuid references auth.users(id) on delete cascade
+- date date
+- status_type text
+- start_time timestamptz nullable
+- end_time timestamptz nullable
+- is_all_day boolean default false
+- intensity integer nullable
+- note text nullable
+- created_at timestamptz default now()
+- updated_at timestamptz default now()
+
+Valid status_type:
+- deep_work
+- dont_disturb
+- low_energy
+- stressed
+- focused
+- tired
+- meeting_mode
+- recovery_mode
+- normal
+
+Constraints:
+- intensity între 1 și 5 dacă nu este null
+- dacă is_all_day = false, start_time și end_time trebuie să existe
+- dacă is_all_day = true, start_time/end_time pot fi null
+
+6. user_settings
+Setări suplimentare ale userului.
+
+Fields:
+- id uuid primary key
+- user_id uuid references auth.users(id) on delete cascade unique
+- quiet_hours_start time nullable
+- quiet_hours_end time nullable
+- default_snooze_minutes integer default 10
+- push_token text nullable
+- platform text nullable
+- theme text default 'system'
+- created_at timestamptz default now()
+- updated_at timestamptz default now()
+
+platform:
+- ios
+- android
+- web
+
+7. weekly_summaries
+Opțional pentru MVP. Poate fi calculat din daily_plans, dar creează tabela dacă o consideri utilă.
+
+Fields:
+- id uuid primary key
+- user_id uuid references auth.users(id) on delete cascade
+- week_start_date date
+- week_end_date date
+- average_score numeric
+- completed_count integer
+- skipped_count integer
+- missed_count integer
+- best_day date nullable
+- most_skipped_category text nullable
+- generated_at timestamptz default now()
+
+Constraints:
+- unique(user_id, week_start_date)
+
+Cerințe SQL:
+Generează un script SQL complet pentru Supabase care include:
+- enable extension pgcrypto dacă este nevoie pentru gen_random_uuid()
+- create tables
+- check constraints
+- indexes
+- updated_at trigger function
+- triggers pentru updated_at
+- enable row level security pentru toate tabelele private
+- policies pentru:
+  - userul poate selecta doar propriile rows
+  - userul poate insert doar propriile rows
+  - userul poate update doar propriile rows
+  - userul poate delete doar propriile rows, unde are sens
+- break_types trebuie să fie read-only pentru useri:
+  - toți userii autentificați pot selecta break_types active
+  - userii normali nu pot insert/update/delete break_types
+- seed data pentru break_types cu minim 10 pauze:
+  1. Eye Reset
+  2. Neck Stretch
+  3. Wrist Mobility
+  4. Posture Reset
+  5. Breathing Reset
+  6. Walk Break
+  7. Shutdown Ritual
+  8. After Meeting Reset
+  9. Debugging Frustration Reset
+  10. Deep Work Recovery
+
+RLS:
+Fii foarte atent la securitate.
+Nu permite userului să vadă sau să modifice datele altui user.
+Folosește auth.uid() în policies.
+
+API / queries:
+După SQL, vreau exemple concrete de operațiuni pe care frontend-ul le va face cu supabase-js:
+
+1. Get current profile
+2. Create/update profile after onboarding
+3. Get active break types
+4. Get today daily plan
+5. Create today daily plan
+6. Insert generated daily_breaks
+7. Update break status to done
+8. Skip break
+9. Snooze break
+10. Recalculate and update daily recovery score
+11. Create mood entry
+12. Get mood entries for today
+13. Get last 7 days daily_plans
+14. Get weekly summary from daily_plans without using weekly_summaries table
+15. Update theme preference
+16. Update push token/platform
+
+Backend logic:
+Explică ce logică trebuie să stea în frontend pentru MVP:
+- generateDailyPlan(profile, breakTypes, moodEntries)
+- calculateRecoveryScore(dailyBreaks, focusAreas)
+- generateWeeklyStats(dailyPlans)
+- applyMoodRulesToPlan(plan, moodEntries)
+
+Explică ce logică poate fi mutată ulterior în Supabase Edge Functions:
+- generateDailyPlan server-side
+- recalculateScore server-side
+- scheduled reminders
+- weekly summary generation
+- premium entitlement checks
+- AI recommendations
+
+Daily plan generation rules:
+- Light intensity = 3 pauze / zi
+- Normal intensity = 5 pauze / zi
+- Aggressive intensity = 7 pauze / zi
+- Pauzele trebuie distribuite între work_start_time și work_end_time
+- Pauzele trebuie să includă focus_areas din profil
+- day_mode influențează tipurile de pauze:
+  - deep_work: eyes, posture, mental_energy
+  - coding_intense: eyes, wrists, posture
+  - meeting_heavy: breathing, movement, mental_energy
+  - learning_day: eyes, posture, breathing
+  - low_energy: breathing, movement, shutdown
+  - debugging_day: mental_energy, breathing, movement
+  - launch_day: breathing, posture, shutdown
+- Dacă mood_entries include dont_disturb sau deep_work pe un interval, pauzele din acel interval trebuie mutate după interval sau marcate ca silent în app
+- Pentru MVP, daily_breaks nu trebuie să aibă silent flag dacă nu este necesar, dar poți recomanda dacă ar fi util
+
+Daily recovery score:
+Propune o formulă simplă:
+- completed / total = până la 80 puncte
+- bonus până la 20 puncte:
+  - +5 pentru shutdown ritual completat
+  - +5 pentru cel puțin 3 categorii diferite completate
+  - +5 dacă nu există missed breaks
+  - +5 dacă userul a completat minim o pauză pentru focus area principală
+- scorul trebuie să fie între 0 și 100
+
+Output dorit:
+Răspunde structurat în secțiuni:
+1. Overview arhitectură Supabase
+2. SQL complet
+3. RLS explicat scurt
+4. Seed data
+5. Exemple supabase-js queries
+6. Logică frontend vs Edge Functions
+7. Recomandări pentru MVP
+8. Checklist de testare backend
+
+Nu omite RLS.
+Nu omite indexes.
+Nu folosi service_role key în frontend.
+Nu implementa API separat Express/Next.js.
+Supabase este backend-ul/API-ul pentru MVP.
+
+
+
+Folosind promptul de mai jos, generează doar SQL-ul complet Supabase cu RLS, indexes, triggers și seed data.
+Acum generează exemplele supabase-js pentru operațiunile principale.

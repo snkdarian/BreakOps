@@ -1,0 +1,743 @@
+Vreau să construim o aplicație cross-platform numită "BreakOps"
+
+Scopul aplicației:
+O aplicație de productivitate și lifestyle pentru IT-iști / developeri care lucrează mult la birou. App-ul îi ajută să ia micro-pauze inteligente pentru ochi, gât, spate, încheieturi și reset mental, în funcție de tipul zilei de lucru, mood, nivel de energie și preferințe personale.
+
+Aplicația trebuie să ruleze atat pe web, cat si pe mobile.
+
+Stack dorit:
+- Expo + React Native + TypeScript
+- Expo Router pentru navigație
+- Supabase pentru:
+  - autentificare
+  - database
+  - user profiles
+  - sync între web și mobile
+- Supabase Auth cu:
+  - email + password
+  - Google login
+  - Apple login pentru iOS
+- Face ID / Touch ID cu expo-local-authentication, dar doar ca unlock local al aplicației după ce userul este deja autentificat
+- AsyncStorage pentru session persistence în React Native
+- Expo Notifications pentru notificări locale/push
+- NativeWind/Tailwind sau alt sistem modern de styling compatibil Expo
+- Chart library compatibilă cu React Native + Web pentru dashboard, de exemplu victory-native, react-native-svg-charts, echivalent compatibil sau o soluție custom cu SVG
+- App trebuie să funcționeze pe:
+  - iOS
+  - Web
+  - Android-ready, chiar dacă Android nu este prioritar în prima versiune
+
+Important:
+Nu vreau date salvate doar local. Vreau să construim de la început cu Supabase DB și autentificare.
+Putem folosi local state/cache doar pentru UX, dar sursa principală de adevăr trebuie să fie Supabase.
+Codul trebuie să fie production-ready, clean, modular, scalabil și ușor de extins.
+
+Concept produs:
+Aplicația trebuie să creeze un plan zilnic de recuperare pentru developer, cu micro-pauze programate în timpul zilei de lucru.
+
+Exemple de break-uri:
+- Eye Reset — 60 sec
+- Neck Stretch — 2 min
+- Wrist Mobility — 90 sec
+- Posture Reset — 45 sec
+- Breathing Reset — 2 min
+- Walk Break — 5 min
+- Shutdown Ritual — 3 min
+- After Meeting Reset — 2 min
+- Debugging Frustration Reset — 90 sec
+- Deep Work Recovery — 3 min
+
+Tipuri de zi:
+- Deep Work
+- Coding Intens
+- Meeting Heavy
+- Learning Day
+- Low Energy Day
+- Light Work
+- Debugging Day
+- Launch Day
+
+Focus areas:
+- Eyes
+- Neck
+- Back
+- Wrists
+- Mental Energy
+- Posture
+- General Recovery
+
+Mood / status:
+Userul trebuie să poată seta mood/status pentru:
+1. întreaga zi
+2. un interval de ore
+
+Exemple mood/status:
+- Deep Work
+- Don’t disturb
+- Low energy
+- Stressed
+- Focused
+- Tired
+- Meeting mode
+- Recovery mode
+
+Dacă userul setează “Deep Work / Don’t disturb” pentru un interval, aplicația trebuie:
+- să reducă notificările
+- să permită doar pauze discrete/non-intrusive
+- să reprogrameze pauzele neesențiale după interval
+- să afișeze statusul pe dashboard
+
+UI / UX requirements:
+Vreau ca aplicația să aibă un UI modern, futuristic, clean, colorat și premium.
+
+Stil vizual dorit:
+- dashboard-uri cu carduri frumoase
+- charts vizuale și colorate
+- gradients subtile
+- elemente rotunjite
+- glassmorphism subtil unde are sens
+- shadow/elevation modern
+- iconografie clară
+- spacing aerisit
+- typography modernă
+- micro-interactions simple
+- cards cu progres circular, bar charts, line charts, weekly status cards
+- vibe de iOS toolkit modern / fintech dashboard / health productivity dashboard
+- să arate bine atât în light mode, cât și în dark mode
+
+Inspirație vizuală:
+Un stil similar cu un dashboard iOS modern cu:
+- carduri albe sau dark cu accente colorate
+- grafice line/bar/circle
+- gradient backgrounds
+- progress rings
+- tab navigation curat
+- statistici ușor de citit
+- componente responsive și polished
+
+Responsive requirements:
+- UI-ul trebuie să fie obligatoriu responsive
+- Mobile-first layout pentru iPhone
+- Pe web trebuie să arate ca un dashboard responsive, nu ca o aplicație mobilă întinsă urât
+- Pe ecrane mari, dashboard-ul poate folosi grid cu 2–3 coloane
+- Pe mobile, cardurile trebuie să fie stacked vertical
+- Navigația pe mobile să fie bottom tabs
+- Pe web, poate exista sidebar sau top nav dacă este mai potrivit
+- Folosește breakpoints și componente adaptive
+- Nu hardcoda dimensiuni care strică layout-ul pe web
+
+Theme requirements:
+Aplicația trebuie să aibă:
+- light mode
+- dark mode
+- system mode
+- userul poate seta tema din Settings/Profile
+- tema aleasă se salvează în Supabase în profil/user_settings
+- UI-ul trebuie să folosească design tokens:
+  - colors
+  - spacing
+  - borderRadius
+  - shadows
+  - typography
+- Nu folosi culori hardcodate peste tot. Creează un theme system centralizat.
+
+Design direction:
+Light mode:
+- background deschis, ușor gri/alb
+- carduri albe
+- accente albastre, mov, cyan, verde, roz, portocaliu
+- gradients subtile
+
+Dark mode:
+- background dark/navy/near black
+- carduri dark cu contrast bun
+- accente neon moderate: cyan, violet, green, blue
+- text foarte lizibil
+- fără contrast obositor
+
+Production-ready UI:
+- toate ecranele trebuie să aibă:
+  - loading states
+  - error states
+  - empty states
+  - skeleton/loading placeholders unde are sens
+- butoanele trebuie să aibă disabled/loading states
+- componentele să fie reutilizabile
+- să existe un design system minim
+
+Ecrane / meniu aplicație:
+
+1. Auth screens
+- Login
+- Register
+- Forgot Password
+- Continue with Google
+- Continue with Apple, doar unde este disponibil
+- Email + password
+- După login, dacă userul activează Face ID/Touch ID, aplicația poate cere biometric unlock la revenire
+
+2. Onboarding
+La prima utilizare, userul trebuie să completeze:
+- nume
+- rol profesional:
+  - Developer
+  - Designer
+  - QA
+  - DevOps
+  - PM
+  - Other
+- ore de lucru normale:
+  - start time
+  - end time
+- zile lucrătoare
+- break intensity:
+  - light
+  - normal
+  - aggressive
+- focus areas:
+  - eyes
+  - neck
+  - back
+  - wrists
+  - mental energy
+  - posture
+- tipul implicit de zi:
+  - coding intense
+  - deep work
+  - meeting heavy
+  - learning day
+  - low energy
+  - light work
+  - debugging day
+  - launch day
+- preferințe notificări:
+  - active/inactive
+  - reminder înainte de break
+  - sunet/vibrație dacă platforma permite
+- dacă vrea Face ID / Touch ID unlock
+- preferință temă:
+  - system
+  - light
+  - dark
+
+După onboarding, se creează profilul în Supabase și se generează planul zilei.
+
+3. Main Dashboard / Home
+Dashboard-ul trebuie să fie vizual, modern și curat.
+
+Elemente:
+- greeting: “Hey, Alex”
+- statusul zilei: Deep Work / Normal / Low Energy etc.
+- Daily Recovery Score, de la 0 la 100
+- progress ring frumos pentru score
+- următoarea pauză programată
+- progresul zilei:
+  - breaks completed
+  - breaks skipped
+  - breaks remaining
+- card cu “Today’s Recovery Plan”
+- card cu “Weekly Status”
+  - “You completed 72% of your recovery breaks this week”
+  - “Best recovery day: Wednesday”
+  - “Most skipped category: wrist”
+- butoane:
+  - Start next break
+  - Set mood/status
+  - Generate today plan again
+- mini grafic pentru ultimele 7 zile
+- carduri colorate pentru:
+  - Eyes
+  - Posture
+  - Mental Energy
+  - Wrists
+- dashboard-ul trebuie să arate bine atât pe mobile, cât și pe web
+
+4. Today Plan screen
+Lista de pauze pentru ziua curentă:
+- ora
+- tip break
+- durată
+- categorie
+- status:
+  - pending
+  - done
+  - skipped
+  - snoozed
+  - missed
+- acțiuni:
+  - Start
+  - Done
+  - Skip
+  - Snooze 10 min
+
+Design:
+- fiecare break să fie un card frumos
+- status badge colorat
+- icon pentru categorie
+- timeline visual opțional
+
+5. Break screen
+Ecran dedicat pentru pauza curentă:
+- titlu break
+- durată
+- timer vizual
+- progress circle sau countdown vizual
+- instrucțiuni pas cu pas
+- animație simplă / icon relevant
+- butoane:
+  - Start
+  - Pause
+  - Complete
+  - Skip
+- după completare, userul poate da feedback:
+  - helped
+  - neutral
+  - not useful
+
+6. Mood / Status screen
+Userul poate seta:
+- mood pentru toată ziua
+- mood pentru interval orar
+
+Fields:
+- status_type
+- start_time
+- end_time
+- intensity optional
+- note optional
+
+Exemple:
+- Deep Work from 10:00 to 12:30
+- Low Energy all day
+- Stressed between 14:00 and 16:00
+
+Reguli:
+- Dacă statusul este Deep Work sau Don’t Disturb, notificările trebuie reduse sau amânate.
+- Dacă statusul este Low Energy, app-ul recomandă pauze mai blânde.
+- Dacă statusul este Stressed, app-ul recomandă breathing reset / walk break.
+
+Design:
+- mood cards colorate
+- status badges
+- interval selector simplu și curat
+- calendar/time picker compatibil mobile + web
+
+7. Stats screen
+Dashboard cu statistici:
+- daily recovery score
+- last 7 days score chart
+- completed vs skipped breaks
+- top completed category
+- most skipped category
+- weekly summary
+- streak:
+  - câte zile la rând a completat minim 60% din pauze
+- insights simple, fără AI:
+  - “You skip most breaks after 15:00”
+  - “Eye resets are your most completed recovery habit”
+  - “Your weekly score improved by 12%”
+
+Design:
+- charts frumoase
+- cards colorate
+- progress rings
+- bar chart pentru completed vs skipped
+- line chart pentru ultimele 7 zile
+- să fie responsive pe web
+
+8. History screen
+Istoric pentru ultimele 7 zile:
+Pentru fiecare zi:
+- date
+- daily score
+- work mode
+- mood/status
+- completed breaks
+- skipped breaks
+- listă cu pauzele făcute
+
+Trebuie să existe și detaliu pe o zi anume.
+
+Design:
+- timeline sau listă de cards
+- fiecare zi are recovery score și status
+- design ușor de scanat
+
+9. Profile screen
+Userul poate vedea și edita:
+- name
+- role
+- default work hours
+- working days
+- break intensity
+- focus areas
+- default day mode
+- notifications settings
+- Face ID / Touch ID setting
+- theme preference
+- linked auth provider info, dacă este disponibil
+- sign out
+- delete account placeholder
+
+10. Break Library screen
+Listă cu toate break-urile disponibile:
+- title
+- category
+- duration
+- instructions
+- difficulty:
+  - easy
+  - medium
+- recommended_for:
+  - eyes
+  - wrists
+  - back
+  - stress
+  - deep work
+- free/premium flag, chiar dacă premium nu este implementat încă
+
+Pentru MVP, premium poate fi doar un flag vizual.
+
+11. Settings screen
+- notifications on/off
+- quiet hours
+- default snooze duration
+- reset onboarding
+- biometric unlock on/off
+- theme:
+  - system
+  - light
+  - dark
+- account actions
+
+Funcționalitate principală:
+1. User se autentifică
+2. Dacă e prima dată, face onboarding
+3. Se generează planul zilei în funcție de:
+   - work_start_time
+   - work_end_time
+   - break_intensity
+   - focus_areas
+   - day_mode
+   - mood/status intervals
+4. User primește notificări pentru break-uri
+5. User poate start/done/skip/snooze
+6. Dashboard-ul se actualizează
+7. Se calculează daily recovery score
+8. Se afișează istoric ultimele 7 zile
+9. Se afișează status săptămânal
+10. Userul poate seta light/dark/system mode
+
+Reguli pentru generarea planului:
+- Light intensity: 3 pauze / zi
+- Normal intensity: 5 pauze / zi
+- Aggressive intensity: 7 pauze / zi
+- Pauzele trebuie distribuite între start și end work time
+- Să nu programeze pauze foarte aproape una de alta
+- Să includă focus areas alese de user
+- Dacă day_mode = Deep Work, să includă eye reset, posture reset, deep work recovery
+- Dacă day_mode = Meeting Heavy, să includă breathing reset, walk break, after meeting reset
+- Dacă day_mode = Low Energy, să includă breathing reset, walk break, shutdown ritual
+- Dacă mood/status = Don’t Disturb pe un interval, pauzele din interval devin silent sau sunt mutate după interval
+- Dacă userul skipuiește multe pauze, aplicația poate recomanda reducerea intensității
+
+Formula simplă pentru Daily Recovery Score:
+- Score pornește de la 0
+- completed breaks contribuie pozitiv
+- skipped/missed breaks reduc scorul
+- dacă userul face cel puțin un break pentru fiecare focus area principal, bonus
+- dacă userul completează shutdown ritual, bonus mic
+- scor final între 0 și 100
+
+Exemplu:
+score = round((completed_breaks / total_scheduled_breaks) * 80 + bonus)
+bonus maxim 20
+
+Database Supabase:
+Vreau să definești schema SQL completă pentru următoarele tabele:
+
+1. profiles
+- id uuid primary key, references auth.users
+- email
+- full_name
+- role
+- avatar_url nullable
+- work_start_time
+- work_end_time
+- working_days text[] sau jsonb
+- break_intensity
+- default_day_mode
+- focus_areas text[] sau jsonb
+- notifications_enabled boolean
+- biometric_enabled boolean
+- theme text default 'system'
+- onboarding_completed boolean
+- created_at
+- updated_at
+
+2. break_types
+- id uuid
+- title
+- slug
+- category
+- duration_seconds
+- instructions jsonb
+- difficulty
+- recommended_for text[] sau jsonb
+- recommended_day_modes text[] sau jsonb
+- is_premium boolean
+- is_active boolean
+- created_at
+
+3. daily_plans
+- id uuid
+- user_id references auth.users
+- date
+- day_mode
+- mood_summary nullable
+- recovery_score integer default 0
+- completed_count integer default 0
+- skipped_count integer default 0
+- missed_count integer default 0
+- total_count integer default 0
+- created_at
+- updated_at
+- unique(user_id, date)
+
+4. daily_breaks
+- id uuid
+- user_id references auth.users
+- daily_plan_id references daily_plans
+- break_type_id references break_types
+- scheduled_at timestamptz
+- started_at timestamptz nullable
+- completed_at timestamptz nullable
+- status text: pending/done/skipped/snoozed/missed
+- snoozed_until timestamptz nullable
+- feedback text nullable: helped/neutral/not_useful
+- created_at
+- updated_at
+
+5. mood_entries
+- id uuid
+- user_id references auth.users
+- date
+- status_type text
+- start_time timestamptz nullable
+- end_time timestamptz nullable
+- is_all_day boolean
+- intensity integer nullable
+- note text nullable
+- created_at
+- updated_at
+
+6. weekly_summaries
+- id uuid
+- user_id references auth.users
+- week_start_date
+- week_end_date
+- average_score
+- completed_count
+- skipped_count
+- missed_count
+- best_day
+- most_skipped_category
+- generated_at
+
+7. user_settings
+- id uuid
+- user_id references auth.users
+- quiet_hours_start nullable
+- quiet_hours_end nullable
+- default_snooze_minutes integer default 10
+- push_token nullable
+- platform nullable
+- theme text default 'system'
+- created_at
+- updated_at
+
+Trebuie să incluzi:
+- SQL create table statements
+- enum/check constraints unde are sens
+- indexes
+- Row Level Security
+- policies astfel încât userul să vadă și să modifice doar propriile date
+- seed data pentru break_types cu minim 10 break-uri
+- trigger pentru updated_at unde are sens
+- helper functions SQL doar dacă sunt utile și nu complică excesiv
+
+Auth:
+- Supabase email/password
+- Google OAuth
+- Apple OAuth / native Sign in with Apple unde este posibil
+- Face ID / Touch ID doar ca local unlock, nu ca provider Supabase
+- Trebuie să gestionezi session persistence corect în Expo/React Native
+- Folosește AsyncStorage pentru session persistence, conform setup-ului Supabase React Native
+- Pentru web, flow-ul OAuth trebuie să suporte redirect URL
+- Include explicații clare pentru configurarea redirect URLs în Supabase
+
+Navigație:
+Folosește Expo Router cu structură de tip:
+- app/(auth)/login.tsx
+- app/(auth)/register.tsx
+- app/(auth)/forgot-password.tsx
+- app/(onboarding)/index.tsx
+- app/(tabs)/index.tsx
+- app/(tabs)/today.tsx
+- app/(tabs)/stats.tsx
+- app/(tabs)/history.tsx
+- app/(tabs)/profile.tsx
+- app/break/[id].tsx
+- app/mood/new.tsx
+- app/settings.tsx
+
+Componente UI:
+- RecoveryScoreCard
+- WeeklyStatusCard
+- TodayBreakCard
+- BreakTimer
+- MoodStatusBadge
+- Last7DaysChart
+- FocusAreaSelector
+- DayModeSelector
+- BreakIntensitySelector
+- ThemeToggle
+- ResponsiveContainer
+- AppCard
+- GradientCard
+- StatCard
+- ProgressRing
+- EmptyState
+- LoadingState
+- ErrorState
+- SkeletonCard
+- ScreenHeader
+- PrimaryButton
+- SecondaryButton
+
+Design system:
+Creează o structură de design system:
+- theme/colors.ts
+- theme/spacing.ts
+- theme/radius.ts
+- theme/shadows.ts
+- theme/typography.ts
+- theme/index.ts
+
+Creează tokens pentru:
+- light colors
+- dark colors
+- semantic colors:
+  - background
+  - card
+  - text
+  - mutedText
+  - primary
+  - secondary
+  - success
+  - warning
+  - danger
+  - info
+  - border
+- chart colors
+- gradients
+
+Servicii / logică:
+Creează fișiere separate:
+- lib/supabase.ts
+- lib/platform.ts
+- services/authService.ts
+- services/profileService.ts
+- services/breakService.ts
+- services/planGenerator.ts
+- services/scoreService.ts
+- services/notificationService.ts
+- services/moodService.ts
+- services/themeService.ts
+- hooks/useAuth.ts
+- hooks/useProfile.ts
+- hooks/useTodayPlan.ts
+- hooks/useStats.ts
+- hooks/useTheme.ts
+- hooks/useResponsive.ts
+
+Important pentru cod:
+- TypeScript strict
+- tipuri pentru DB
+- error handling
+- loading states
+- empty states
+- clean architecture
+- mobile-first UI
+- dark mode support
+- responsive web support
+- cod modular
+- componente reutilizabile
+- naming clar
+- fără fișiere gigant
+- fără logică business direct în componente dacă poate fi extrasă în services/hooks
+- evită overengineering, dar păstrează structura scalabilă
+- production-ready code
+- comentarii doar unde ajută
+- securitate: nu expune service_role key în frontend
+- folosește doar anon public key Supabase în app
+- RLS obligatoriu
+
+MVP Scope:
+Pentru prima versiune, implementează:
+1. Auth email/password
+2. Google login dacă este simplu
+3. Apple login pregătit/configurat pentru iOS, dar poate fi implementat după email auth
+4. Onboarding complet
+5. Profile save în Supabase
+6. Theme system light/dark/system
+7. Break types seed în Supabase
+8. Generate daily plan
+9. Today dashboard
+10. Start/done/skip/snooze break
+11. Daily recovery score
+12. Last 7 days history
+13. Mood/status pentru zi sau interval
+14. Basic stats dashboard
+15. Profile/settings
+16. Notificări locale basic
+17. Responsive web dashboard
+18. UI futuristic, polished, colorat, similar cu un dashboard iOS modern
+
+Nu implementa încă:
+- payments
+- premium subscriptions reale
+- AI
+- team features
+- Slack integration
+- wearable integration
+
+Calitate finală:
+La final, codul trebuie să fie:
+- production-ready
+- curat
+- scalabil
+- ușor de extins
+- fără hack-uri inutile
+- fără date mock în ecranele finale, cu excepția seed data pentru break_types
+- pregătit pentru monetizare premium în viitor
+- pregătit pentru App Store / web deploy, chiar dacă publicarea efectivă se face mai târziu
+
+Vreau să-mi generezi proiectul pas cu pas:
+Pasul 1: setup proiect Expo + instalare dependencies + structura de foldere + theme system inițial
+Pasul 2: schema SQL Supabase + RLS + seed data
+Pasul 3: Supabase client + Auth context + session persistence
+Pasul 4: Auth screens
+Pasul 5: Onboarding + profile save
+Pasul 6: Theme system complet + light/dark/system mode
+Pasul 7: Plan generator
+Pasul 8: Dashboard + today plan
+Pasul 9: Break timer
+Pasul 10: Stats + last 7 days history
+Pasul 11: Mood/status feature
+Pasul 12: Notifications
+Pasul 13: Responsive web polish
+Pasul 14: UI polish final cu gradients, charts, cards, skeleton states, empty states
+Pasul 15: Cleanup, refactor, production-readiness checklist
+
+Începe prin a genera un plan pt Pasul 1 și Pasul 2 complet.

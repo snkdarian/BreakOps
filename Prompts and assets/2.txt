@@ -1,0 +1,10 @@
+Perfect. Acum implementează doar Pasul 1 actualizat:
+- setup proiect
+- design system dark/neon
+- layout shell responsive
+- componente UI de bază
+
+Nu implementa încă Supabase.
+Nu implementa încă auth.
+Nu implementa încă ecranele complete.
+Returnează codul pe fișiere, cu path complet.
