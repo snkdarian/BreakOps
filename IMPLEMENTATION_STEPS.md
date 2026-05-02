@@ -49,3 +49,6 @@ Documentation rule: every step and meaningful feature must update this tracker p
 - Step 1: scanned `src/components` and `src/app` for raw hex/rgba colors; none found outside theme tokens.
 - Step 1: `README.md` added with detailed setup, structure, design system, responsive behavior, verification, and documentation rules.
 - Step 1: web export passed again after Expo-compatible dependency alignment.
+- Step 1 fix: repaired web SVG warning in `RecoveryScoreRing` by replacing `rotation/origin` with an SVG group transform.
+- Step 1 fix: repaired desktop preview layout squeeze by constraining hero copy, score, chart, and topbar widths.
+- Step 1 fix: `npm run typecheck` and `npx expo export --platform web` passed after the layout/SVG repair.

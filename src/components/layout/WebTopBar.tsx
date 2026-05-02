@@ -6,7 +6,7 @@ import { GradientButton, SecondaryButton } from "@/components/ui";
 export function WebTopBar() {
   return (
     <View style={styles.topBar}>
-      <View>
+      <View style={styles.titleWrap}>
         <Text style={styles.kicker}>Dashboard</Text>
         <Text style={styles.title}>Smart breaks. Better you.</Text>
       </View>
@@ -34,7 +34,10 @@ const styles = StyleSheet.create({
   actions: {
     alignItems: "center",
     flexDirection: "row",
+    flexShrink: 1,
     gap: spacing[3],
+    justifyContent: "flex-end",
+    minWidth: 0,
   },
   avatar: {
     color: colors.dark.accent,
@@ -56,6 +59,7 @@ const styles = StyleSheet.create({
     gap: spacing[3],
     minHeight: 54,
     paddingHorizontal: spacing[4],
+    flexShrink: 0,
   },
   profileMeta: {
     color: colors.dark.secondary,
@@ -77,7 +81,10 @@ const styles = StyleSheet.create({
     gap: spacing[2],
     height: 48,
     paddingHorizontal: spacing[4],
-    width: 340,
+    flexShrink: 1,
+    maxWidth: 340,
+    minWidth: 220,
+    width: 300,
   },
   searchText: {
     color: colors.dark.subtleText,
@@ -88,6 +95,10 @@ const styles = StyleSheet.create({
     fontSize: typography.size.title,
     fontWeight: typography.weight.black,
     lineHeight: typography.lineHeight.title,
+  },
+  titleWrap: {
+    flexShrink: 0,
+    minWidth: 330,
   },
   topBar: {
     alignItems: "center",

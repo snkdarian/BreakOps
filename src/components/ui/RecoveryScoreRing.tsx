@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import Svg, { Circle, Defs, LinearGradient as SvgGradient, Stop } from "react-native-svg";
+import Svg, { Circle, Defs, G, LinearGradient as SvgGradient, Stop } from "react-native-svg";
 import { colors, palette, shadows, typography } from "@/theme";
 
 type RecoveryScoreRingProps = {
@@ -26,19 +26,19 @@ export function RecoveryScoreRing({ label = "Great", score, size = 164 }: Recove
           </SvgGradient>
         </Defs>
         <Circle cx={size / 2} cy={size / 2} r={radius} stroke={colors.dark.cardMuted} strokeWidth={strokeWidth} fill="transparent" />
-        <Circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          stroke="url(#scoreRing)"
-          strokeWidth={strokeWidth}
-          fill="transparent"
-          strokeDasharray={`${circumference} ${circumference}`}
-          strokeDashoffset={dashOffset}
-          strokeLinecap="round"
-          rotation="-90"
-          origin={`${size / 2}, ${size / 2}`}
-        />
+        <G transform={`rotate(-90 ${size / 2} ${size / 2})`}>
+          <Circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            stroke="url(#scoreRing)"
+            strokeWidth={strokeWidth}
+            fill="transparent"
+            strokeDasharray={`${circumference} ${circumference}`}
+            strokeDashoffset={dashOffset}
+            strokeLinecap="round"
+          />
+        </G>
       </Svg>
       <View style={styles.content}>
         <Text style={styles.score}>{clamped}</Text>

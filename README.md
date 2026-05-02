@@ -270,6 +270,18 @@ Step 1 verification completed:
 
 Note: `npm install` currently reports moderate vulnerabilities in transitive dependencies. No automatic `npm audit fix` was applied because that can introduce broad dependency changes. This should be reviewed later as part of production readiness.
 
+## Step 1 Fix Log
+
+After the first web preview, two issues were found and fixed:
+
+- `RecoveryScoreRing` triggered a React DOM warning on web because the SVG circle used `rotation` plus `origin`, which produced an invalid `transform-origin` DOM property. The ring now rotates its progress circle through an SVG `<G transform="rotate(...)">`, which keeps the visual start point at the top without the DOM warning.
+- The desktop hero layout could squeeze the title column until words wrapped letter-by-letter. The hero now gives the copy, score ring, and chart explicit flex basis/min-width rules, and the top bar has tighter width constraints so it behaves like a dashboard header instead of overflowing into nearby panels.
+
+Post-fix verification:
+
+- `npm run typecheck` passes.
+- `npx expo export --platform web` passes.
+
 ## Documentation Rule Going Forward
 
 For every implementation step and meaningful feature, update both:

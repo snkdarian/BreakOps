@@ -1,14 +1,15 @@
 import Svg, { Defs, LinearGradient as SvgGradient, Path, Stop } from "react-native-svg";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, type StyleProp, type ViewStyle } from "react-native";
 import { colors, palette } from "@/theme";
 
 type MiniLineChartProps = {
   height?: number;
+  style?: StyleProp<ViewStyle>;
 };
 
-export function MiniLineChart({ height = 72 }: MiniLineChartProps) {
+export function MiniLineChart({ height = 72, style }: MiniLineChartProps) {
   return (
-    <View style={[styles.wrap, { height }]}>
+    <View style={[styles.wrap, { height }, style]}>
       <Svg width="100%" height="100%" viewBox="0 0 240 72" preserveAspectRatio="none">
         <Defs>
           <SvgGradient id="line" x1="0" y1="0" x2="1" y2="0">
@@ -27,5 +28,6 @@ const styles = StyleSheet.create({
   wrap: {
     backgroundColor: colors.dark.surface,
     overflow: "hidden",
+    width: "100%",
   },
 });

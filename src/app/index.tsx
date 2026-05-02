@@ -42,7 +42,11 @@ export default function HomeScreen() {
               <Text style={styles.scoreMetaText}>+12 pts vs yesterday</Text>
             </View>
           </View>
-          {isDesktop ? <MiniLineChart height={140} /> : null}
+          {isDesktop ? (
+            <View style={styles.heroChart}>
+              <MiniLineChart height={140} />
+            </View>
+          ) : null}
         </View>
 
         <View style={[styles.dashboardGrid, !isDesktop && styles.mobileStack]}>
@@ -138,6 +142,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.cardLarge,
     borderWidth: 1,
     flexDirection: "row",
+    flexWrap: "wrap",
     gap: spacing[8],
     marginBottom: spacing[5],
     overflow: "hidden",
@@ -159,12 +164,24 @@ const styles = StyleSheet.create({
     lineHeight: typography.lineHeight.lg,
   },
   heroCopy: {
-    flex: 1,
+    flexBasis: 360,
+    flexGrow: 1,
+    flexShrink: 0,
     gap: spacing[2],
+    minWidth: 360,
   },
   heroScore: {
     alignItems: "center",
+    flexShrink: 0,
     gap: spacing[3],
+    width: 220,
+  },
+  heroChart: {
+    flexBasis: 260,
+    flexGrow: 1,
+    flexShrink: 1,
+    maxWidth: 420,
+    minWidth: 260,
   },
   heroTitle: {
     color: colors.dark.text,
